@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Your College Events Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --gray: #7f8c8d;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--dark);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .login-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .college-selector {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .college-selector select, 
+        .college-selector button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .college-selector select {
+            min-width: 200px;
+        }
+
+        .college-selector button {
+            background: var(--accent);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .college-selector button:hover {
+            background: #c0392b;
+        }
+
+        /* Events Section */
+        .events-section {
+            padding: 4rem 0;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h3 {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-card h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .event-card .college {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-card .date {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-card .description {
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+
+        .event-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .interest-btn, .share-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .interest-btn {
+            background: var(--success);
+            color: white;
+        }
+
+        .interest-btn:hover {
+            background: #219653;
+        }
+
+        .share-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .share-btn:hover {
+            background: #5a6fd8;
+        }
+
+        /* Add Event Section */
+        .add-event {
+            background: var(--light);
+            padding: 4rem 0;
+        }
+
+        .event-form {
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--success);
+            color: white;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #219653;
+        }
+
+        /* Resources Section */
+        .resources-section {
+            padding: 4rem 0;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resource-card h4 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resource-card p {
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            color: #bbb;
+            margin-top: 2rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            
+            .college-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .events-grid, .resources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: var(--success);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateX(150%);
+            transition: transform 0.3s;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-school"></i>
+                <span>CampusConnect</span>
+            </div>
+            <div class="nav-links">
+                <a href="#events">Events</a>
+                <a href="#resources">Resources</a>
+                <a href="#colleges">Colleges</a>
+                <button class="login-btn">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Never Miss Another Campus Event</h2>
+            <p>Discover hackathons, fests, and club activities happening right at your college and nearby campuses.</p>
+            <div class="college-selector">
+                <select id="collegeSelect">
+                    <option value="">Select Your College</option>
+                    <option value="college1">Tech University</option>
+                    <option value="college2">Science Institute</option>
+                    <option value="college3">Arts College</option>
+                    <option value="college4">Business School</option>
+                </select>
+                <button onclick="showEvents()">Explore Events</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('events')">Events</div>
+        <div class="tab" onclick="switchTab('resources')">Resource Board</div>
+        <div class="tab" onclick="switchTab('addevent')">Add Event</div>
+    </div>
+
+    <!-- Events Section -->
+    <section id="events" class="tab-content active">
+        <div class="events-section">
+            <div class="section-header">
+                <h3>Upcoming Events</h3>
+                <p>Discover what's happening on campuses near you</p>
+            </div>
+            <div class="events-grid" id="eventsGrid">
+                <!-- Events will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="tab-content">
+        <div class="resources-section">
+            <div class="section-header">
+                <h3>Resource Sharing Board</h3>
+                <p>Borrow equipment, find teammates, and share resources</p>
+            </div>
+            <div class="resources-grid" id="resourcesGrid">
+                <!-- Resources will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Event Section -->
+    <section id="addevent" class="tab-content">
+        <div class="add-event">
+            <div class="section-header">
+                <h3>Add Your Event</h3>
+                <p>Share your event with the campus community</p>
+            </div>
+            <form id="eventForm" class="event-form">
+                <div class="form-group">
+                    <label for="eventName">Event Name</label>
+                    <input type="text" id="eventName" placeholder="e.g., Annual Hackathon" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventCollege">College</label>
+                    <select id="eventCollege" required>
+                        <option value="">Select College</option>
+                        <option value="Tech University">Tech University</option>
+                        <option value="Science Institute">Science Institute</option>
+                        <option value="Arts College">Arts College</option>
+                        <option value="Business School">Business School</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDesc">Description</label>
+                    <textarea id="eventDesc" placeholder="Describe your event..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Add Event</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-school"></i>
+                <span>CampusConnect</span>
+            </div>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#terms">Terms</a>
+            </div>
+            <p class="copyright">© 2024 CampusConnect. Built for connecting campus communities.</p>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        Action completed successfully!
+    </div>
+
+    <script>
+        // Sample data with more events and resources
+        let events = [
+            {
+                id: 1,
+                name: "Annual Tech Fest",
+                college: "Tech University",
+                date: "2024-12-15",
+                description: "Biggest technology festival of the year with hackathons, workshops, and tech talks from industry leaders."
+            },
+            {
+                id: 2,
+                name: "Coding Hackathon",
+                college: "Science Institute", 
+                date: "2024-12-10",
+                description: "24-hour coding competition with amazing prizes. Open to all skill levels. Food and drinks provided."
+            },
+            {
+                id: 3,
+                name: "Startup Workshop",
+                college: "Business School",
+                date: "2024-12-20",
+                description: "Learn how to build your startup from industry experts. Pitch your ideas and get feedback."
+            },
+            {
+                id: 4,
+                name: "Cultural Fest",
+                college: "Arts College",
+                date: "2024-11-25",
+                description: "Annual cultural festival with music, dance, drama, and art exhibitions from various cultures."
+            }
+        ];
+
+        let resources = [
+            {
+                id: 1,
+                title: "Arduino Kit Available",
+                type: "Equipment",
+                college: "Tech University",
+                description: "I have an Arduino starter kit that I can lend for hackathon projects. Comes with sensors and components.",
+                contact: "tech@example.com"
+            },
+            {
+                id: 2,
+                title: "Looking for UI Designer",
+                type: "Team Member",
+                college: "Science Institute",
+                description: "Our team needs a UI/UX designer for an upcoming hackathon. We have developers but need design help.",
+                contact: "design@example.com"
+            },
+            {
+                id: 3,
+                title: "Free Domain for Web Project",
+                type: "Resource",
+                college: "Business School",
+                description: "I have a spare domain name that I'm not using. Available for a student web project.",
+                contact: "web@example.com"
+            }
+        ];
+
+        // Load data from localStorage if available
+        function loadData() {
+            const savedEvents = localStorage.getItem('campusConnectEvents');
+            const savedResources = localStorage.getItem('campusConnectResources');
+            
+            if (savedEvents) {
+                events = JSON.parse(savedEvents);
+            }
+            
+            if (savedResources) {
+                resources = JSON.parse(savedResources);
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('campusConnectEvents', JSON.stringify(events));
+            localStorage.setItem('campusConnectResources', JSON.stringify(resources));
+        }
+
+        // Display events on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            displayEvents(events);
+            displayResources(resources);
+            
+            // Set min date to today for event form
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('eventDate').min = today;
+        });
+
+        function displayEvents(eventsToShow) {
+            const eventsGrid = document.getElementById('eventsGrid');
+            eventsGrid.innerHTML = '';
+            
+            if (eventsToShow.length === 0) {
+                eventsGrid.innerHTML = '<p>No events found. Be the first to add one!</p>';
+                return;
+            }
+            
+            eventsToShow.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+                eventCard.innerHTML = `
+                    <h4>${event.name}</h4>
+                    <div class="college"><i class="fas fa-university"></i> ${event.college}</div>
+                    <div class="date"><i class="far fa-calendar-alt"></i> ${formatDate(event.date)}</div>
+                    <p class="description">${event.description}</p>
+                    <div class="event-actions">
+                        <button class="interest-btn" onclick="interestedInEvent(${event.id})">
+                            <i class="far fa-thumbs-up"></i> I'm Interested
+                        </button>
+                        <button class="share-btn" onclick="shareEvent(${event.id})">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                    </div>
+                `;
+                eventsGrid.appendChild(eventCard);
+            });
+        }
+
+        function displayResources(resourcesToShow) {
+            const resourcesGrid = document.getElementById('resourcesGrid');
+            resourcesGrid.innerHTML = '';
+            
+            if (resourcesToShow.length === 0) {
+                resourcesGrid.innerHTML = '<p>No resources listed yet. Add one to help others!</p>';
+                return;
+            }
+            
+            resourcesToShow.forEach(resource => {
+                const resourceCard = document.createElement('div');
+                resourceCard.className = 'resource-card';
+                resourceCard.innerHTML = `
+                    <h4><i class="fas ${getResourceIcon(resource.type)}"></i> ${resource.title}</h4>
+                    <p>${resource.description}</p>
+                    <div class="resource-meta">
+                        <span><i class="fas fa-university"></i> ${resource.college}</span>
+                        <span><i class="fas ${getTypeIcon(resource.type)}"></i> ${resource.type}</span>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button class="interest-btn" onclick="contactAboutResource(${resource.id})" style="width: 100%;">
+                            <i class="fas fa-envelope"></i> Contact: ${resource.contact}
+                        </button>
+                    </div>
+                `;
+                resourcesGrid.appendChild(resourceCard);
+            });
+        }
+
+        function getResourceIcon(type) {
+            switch(type) {
+                case 'Equipment': return 'fa-toolbox';
+                case 'Team Member': return 'fa-users';
+                case 'Resource': return 'fa-link';
+                default: return 'fa-question-circle';
+            }
+        }
+
+        function getTypeIcon(type) {
+            switch(type) {
+                case 'Equipment': return 'fa-cogs';
+                case 'Team Member': return 'fa-user-plus';
+                case 'Resource': return 'fa-handshake';
+                default: return 'fa-info-circle';
+            }
+        }
+
+        function showEvents() {
+            const selectedCollege = document.getElementById('collegeSelect').value;
+            let filteredEvents = events;
+            
+            if (selectedCollege) {
+                // For demo, we'll just show a filtered view
+                const collegeName = document.getElementById('collegeSelect').options[document.getElementById('collegeSelect').selectedIndex].text;
+                filteredEvents = events.filter(event => event.college === collegeName);
+                
+                if (filteredEvents.length === 0) {
+                    showNotification(`No events found for ${collegeName}. Showing all events instead.`);
+                    filteredEvents = events;
+                } else {
+                    showNotification(`Showing events for ${collegeName}`);
+                }
+            }
+            
+            displayEvents(filteredEvents);
+            switchTab('events');
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Handle form submission
+        document.getElementById('eventForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('eventName').value;
+            const college = document.getElementById('eventCollege').value;
+            const date = document.getElementById('eventDate').value;
+            const description = document.getElementById('eventDesc').value;
+            
+            const newEvent = {
+                id: events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1,
+                name,
+                college,
+                date,
+                description
+            };
+            
+            events.push(newEvent);
+            saveData();
+            displayEvents(events);
+            
+            // Reset form
+            this.reset();
+            showNotification('Event added successfully!');
+            switchTab('events');
+        });
+
+        function interestedInEvent(eventId) {
+            const event = events.find(e => e.id === eventId);
+            showNotification(`Thanks for your interest in "${event.name}"! Organizers will be notified.`);
+        }
+
+        function shareEvent(eventId) {
+            const event = events.find(e => e.id === eventId);
+            if (navigator.share) {
+                navigator.share({
+                    title: event.name,
+                    text: event.description,
+                    url: window.location.href,
+                })
+                .then(() => showNotification('Event shared successfully!'))
+                .catch(error => showNotification('Error sharing event'));
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                navigator.clipboard.writeText(`${event.name} - ${event.college} - ${formatDate(event.date)}`);
+                showNotification('Event details copied to clipboard!');
+            }
+        }
+
+        function contactAboutResource(resourceId) {
+            const resource = resources.find(r => r.id === resourceId);
+            showNotification(`Contact ${resource.contact} about: ${resource.title}`);
+        }
+
+        function switchTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize with some resources in localStorage if empty
+        if (!localStorage.getItem('campusConnectResources')) {
+            saveData();
+        }
+    </script>
+</body>
+</html>
